@@ -1,28 +1,21 @@
 package com.tree.binarytree;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class BinaryTree<E extends Comparable<E>> {
     private BinaryNode<E> root;
 
-    public BinaryTree() {
-        this(null);
-    }
-
-    public BinaryTree(final BinaryNode<E> root) {
-        this.root = root;
-    }
-
-    public void add(final E... datas) {
+    @SafeVarargs
+    public final void add(final E... datas) {
         for (E data : datas) {
             this.add(data);
         }
     }
 
-    public void add(final E data) {
-        if (this.root == null) this.root = new BinaryNode<>(data);
-        else this.root.add(data);
+    public final void add(final E data) {
+        if (this.root == null) {
+            this.root = new BinaryNode<>(data);
+        } else {
+            this.root.add(data);
+        }
     }
 
     @Override
@@ -31,6 +24,12 @@ public class BinaryTree<E extends Comparable<E>> {
                 "root=" + this.root +
                 '}';
     }
+
+    public final String toTreeString() {
+        if (this.root == null) return "";
+        return this.root.toTreeString();
+    }
+
 
     public String prefix() {
         StringBuilder sb = new StringBuilder();
@@ -57,27 +56,18 @@ public class BinaryTree<E extends Comparable<E>> {
         StringBuilder sb = new StringBuilder();
         if (this.root == null) return sb.toString();
 
-        Queue<BinaryNode<E>> queue = new LinkedList<>();
-        queue.add(this.root);
-        while (!queue.isEmpty()) {
-            BinaryNode<E> node = queue.poll();
-            sb.append(node.getData()).append(" ");
-            if (node.getLeft() != null) queue.add(node.getLeft());
-            if (node.getRight() != null) queue.add(node.getRight());
-
-        }
-        return sb.toString();
+        return this.root.lateral(sb).toString();
     }
 
-    public int depth() {
+    public final int getHeight() {
         if (this.root == null) return 0;
-        return this.root.depth();
+        return this.root.getDepth();
     }
 
-    /*public int balanceFactor() {
-        if (this.root == null) return 0;
-        return this.root.balanceFactor;
-    }*/
+    public boolean isAVL() {
+        if (this.root == null) return true;
+        return BinaryNode.isAVL(this.root);
+    }
 }
 
 
